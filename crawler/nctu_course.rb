@@ -4,21 +4,17 @@ require 'yaml'
 require 'hashie'
 require 'crawler_rocks'
 
-require 'pry'
-
 require 'thread'
 require 'thwait'
 
 class NctuCourse
   include CrawlerRocks::DSL
 
-  def initialize year: current_year, term: current_term, params: nil
+  def initialize year: nil, term: nil
     @host = "http://timetable.nctu.edu.tw/"
 
-    @year = params && params["year"].to_i || year
-    @term = params && params["term"].to_i || term
-
-    @courses = []
+    @year = year
+    @term = term
   end
 
   # 大概十二秒
@@ -121,8 +117,9 @@ class NctuCourse
 
     course_list = get_cos_list(degree: unit_id[0], dep_id: unit_id[1..-1])
     if not course_list.empty?
-      courses.concat course_list[unit_id]["1"].values
-      courses.concat course_list[unit_id]["2"].values
+      courses_h = course_list[unit_id]
+      courses_h["1"] && courses.concat(courses_h["1"].values)
+      courses_h["2"] && courses.concat(courses_h["2"].values)
     end
 
     courses
@@ -230,14 +227,4 @@ class NctuCourse
     }
     JSON.parse(r)
   end
-
-  def current_year
-    (Time.now.month.between?(1, 7) ? Time.now.year - 1 : Time.now.year)
-  end
-
-  def current_term
-    (Time.now.month.between?(2, 7) ? 2 : 1)
-  end
 end
-
-# cc = NctuCourse.new(year: 2014, term: 1)
