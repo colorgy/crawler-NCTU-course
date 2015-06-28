@@ -56,8 +56,8 @@ class NctuCourseCrawler
     @courses.uniq.map do |old_course|
       old_course = Hashie::Mash.new old_course
 
-      year = old_course.acy
-      term = old_course.sem
+      year = old_course.acy.to_i + 1911
+      term = old_course.sem.to_i
 
       # normalize time location
       course_days = []
