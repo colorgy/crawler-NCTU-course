@@ -78,7 +78,7 @@ class NctuCourseCrawler
       course = {
         year: year,
         term: term,
-        code: "#{year}-#{term}-#{old_course.cos_code}",
+        code: "#{year}-#{term}-#{old_course.cos_code}-#{old_course.cos_id}-#{department_code}",
         general_code: old_course.cos_code,
         url: old_course.URL,
         name: old_course.cos_cname,
@@ -128,5 +128,5 @@ class NctuCourseCrawler
   end
 end
 
-# cc = NctuCourseCrawler.new(year: 2014, term: 1)
-# File.write('courses.json', JSON.pretty_generate(cc.courses))
+# cc = NctuCourseCrawler.new(year: 2015, term: 1)
+# File.write('nctu_courses.json', JSON.pretty_generate(cc.courses))
