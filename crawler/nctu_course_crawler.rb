@@ -53,6 +53,7 @@ class NctuCourseCrawler
     ThreadsWait.all_waits(*@threads)
 
     @threads = []
+    @new_courses = []
     # normalize course
     @courses.uniq.each do |old_course|
       sleep(1) until (
@@ -121,12 +122,12 @@ class NctuCourseCrawler
           location_9: course_locations[8],
         }
         @after_each_proc.call(course: course) if @after_each_proc
-        @courses << course
+        @new_courses << course
       end # end Thread
     end
     ThreadsWait.all_waits(*@threads)
 
-    @threads
+    @new_courses
   end
 
   def current_year
