@@ -42,7 +42,7 @@ class NctuCourseCrawler
     cc.departments.keys.each do |unit_id|
       sleep(1) until (
         @threads.delete_if { |t| !t.status };  # remove dead (ended) threads
-        @threads.count < (ENV['MAX_THREADS'] || 30)
+        @threads.count < (ENV['MAX_THREADS'] || 25)
       )
       @threads << Thread.new do
         @courses.concat cc.get_course_list(unit_id: unit_id)
@@ -75,10 +75,11 @@ class NctuCourseCrawler
 
       department_code = "#{old_course.degree}#{old_course.dep_id}"
 
-      {
+      course = {
         year: year,
         term: term,
         code: "#{year}-#{term}-#{old_course.cos_code}",
+        general_code: old_course.cos_code,
         url: old_course.URL,
         name: old_course.cos_cname,
         credits: old_course.cos_credit,
@@ -113,6 +114,8 @@ class NctuCourseCrawler
         location_8: course_locations[7],
         location_9: course_locations[8],
       }
+      @after_each_proc.call(course: course) if @after_each_proc
+      course
     end
   end
 
@@ -125,5 +128,5 @@ class NctuCourseCrawler
   end
 end
 
-cc = NctuCourseCrawler.new(year: 2014, term: 1)
-File.write('courses.json', JSON.pretty_generate(cc.courses))
+# cc = NctuCourseCrawler.new(year: 2014, term: 1)
+# File.write('courses.json', JSON.pretty_generate(cc.courses))
