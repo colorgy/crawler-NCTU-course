@@ -87,6 +87,7 @@ class NctuCourseCrawler
           term: term,
           code: "#{year}-#{term}-#{old_course.cos_code}-#{old_course.cos_id}-#{department_code}",
           general_code: old_course.cos_code,
+          lecturer: old_course.teacher,
           url: old_course.URL,
           name: old_course.cos_cname,
           credits: old_course.cos_credit,
